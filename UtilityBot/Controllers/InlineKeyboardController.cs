@@ -21,7 +21,7 @@ namespace UtilityBot.Controllers
         {
             if (callbackQuery?.Data == null)
                 return;
-            _memoryStorage.GetSession(callbackQuery.From.Id).Type = callbackQuery.Data;
+            _memoryStorage.Save("Выбран режим сессии", callbackQuery.From.Id, callbackQuery.Data);
 
             string sessionType = callbackQuery.Data switch
             {

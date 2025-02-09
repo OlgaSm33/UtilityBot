@@ -4,9 +4,10 @@ namespace UtilityBot.Services
 {
     public interface IStorage
     {
-        /// <summary>
-        /// Получение сессии пользователя по идентификатору
-        /// </summary>
-        Session GetSession(long chatId);
+        void Save(string message, long chatID, string sessionType = default);
+        IEnumerable<string> Load();
+        string GetLastSessionType(long chatID);
+
+
     }
 }

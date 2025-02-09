@@ -20,9 +20,12 @@ namespace UtilityBot.Controllers
 
         public async Task Handle(Message message, CancellationToken ct)
         {
+            string sessionType = _memoryStorage.GetLastSessionType(message.Chat.Id);
             switch (message.Text)
             {
                 case "/start":
+
+                    _memoryStorage.Save("Нажата кнопка '/start'", message.Chat.Id, sessionType);
                     var buttons = new List<InlineKeyboardButton[]>();
                     buttons.Add(new[]
                     {
@@ -33,8 +36,9 @@ namespace UtilityBot.Controllers
                         $"{Environment.NewLine}Нажмите кнопку <b>'Текст'</b>, если хотите посчитать символы в сообщениях. {Environment.NewLine} Нажмите кнопку <b>'Числа'</b>, если хотите вычислить сумму чисел", cancellationToken: ct, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new InlineKeyboardMarkup(buttons));
                     break;
                 default:
-                    string sessionType = _memoryStorage.GetSession(message.Chat.Id).Type;
-                    switch(sessionType)
+
+                    _memoryStorage.Save($"Получено текстовое сообщение: {message.Text}", message.Chat.Id, sessionType);
+                    switch (sessionType)
                     {
                         case "text":
                             await _tgBotClient.SendMessage(message.Chat.Id, "Количество символов в тексте: " + TextHandler.TextLenght(message.Text).ToString(), cancellationToken: ct);
@@ -49,6 +53,7 @@ namespace UtilityBot.Controllers
                             }
                             catch (Exception)
                             {
+                                _memoryStorage.Save($"Введены данные, не соответствующие выбранному режиму сессии: {message.Text}", message.Chat.Id, sessionType);
                                 await _tgBotClient.SendMessage(message.Chat.Id, "Вы ввели не последовательность чисел. Попробуйте ещё раз. ", cancellationToken: ct);
                             }
                             break;

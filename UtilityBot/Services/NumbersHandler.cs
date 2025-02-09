@@ -18,13 +18,6 @@ namespace UtilityBot.Services
             return _numbers.Sum();
         }
 
-        //public void ShowNumbers()
-        //{
-        //    for (int i = 0; i < _numbers.Length; i++)
-        //    {
-        //        Console.WriteLine(_numbers[i]);
 
-        //    }
-        //}
     }
 }
